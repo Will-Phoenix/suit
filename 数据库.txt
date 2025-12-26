@@ -1,0 +1,486 @@
+-- 1. 班级表
+CREATE TABLE Class (
+    ClassId VARCHAR(20) PRIMARY KEY,
+    ClassName VARCHAR(50) NOT NULL,
+    Major VARCHAR(50),
+    Grade INT,
+    HeadTeacher VARCHAR(20)
+);
+
+-- 2. 学生表
+CREATE TABLE Student (
+    StudentId VARCHAR(20) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Gender CHAR(2),
+    BirthDate DATE,
+    Phone VARCHAR(15),
+    Email VARCHAR(50),
+    EnrollmentDate DATE,
+    ClassId VARCHAR(20),
+    FOREIGN KEY (ClassId) REFERENCES Class(ClassId)
+);
+
+-- 3. 课程表
+CREATE TABLE Course (
+    CourseId VARCHAR(20) PRIMARY KEY,
+    CourseName VARCHAR(100) NOT NULL,
+    Credit INT,
+    Hours INT,
+    Type VARCHAR(10),
+    Semester VARCHAR(20)
+);
+
+-- 4. 教师表
+CREATE TABLE Teacher (
+    TeacherId VARCHAR(20) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Title VARCHAR(20),
+    Department VARCHAR(50),
+    Phone VARCHAR(15),
+    Email VARCHAR(50)
+);
+
+-- 5. 成绩表（学生-课程的关联表）
+CREATE TABLE Score (
+    ScoreId INT AUTO_INCREMENT PRIMARY KEY,
+    StudentId VARCHAR(20),
+    CourseId VARCHAR(20),
+    UsualScore DECIMAL(5,2) CHECK (UsualScore >= 0 AND UsualScore <= 100),
+    MidtermScore DECIMAL(5,2) CHECK (MidtermScore >= 0 AND MidtermScore <= 100),
+    FinalScore DECIMAL(5,2) CHECK (FinalScore >= 0 AND FinalScore <= 100),
+    TotalScore DECIMAL(5,2) CHECK (TotalScore >= 0 AND TotalScore <= 100),
+    ExamDate DATE,
+    UNIQUE KEY uk_student_course (StudentId, CourseId),
+    FOREIGN KEY (StudentId) REFERENCES Student(StudentId) ON DELETE CASCADE,
+    FOREIGN KEY (CourseId) REFERENCES Course(CourseId) ON DELETE CASCADE
+);
+
+-- 6. 授课表（教师-课程的关联表）
+CREATE TABLE Teaching (
+    TeachingId INT AUTO_INCREMENT PRIMARY KEY,
+    TeacherId VARCHAR(20),
+    CourseId VARCHAR(20),
+    AcademicYear VARCHAR(20),
+    Term VARCHAR(10),
+    FOREIGN KEY (TeacherId) REFERENCES Teacher(TeacherId) ON DELETE CASCADE,
+    FOREIGN KEY (CourseId) REFERENCES Course(CourseId) ON DELETE CASCADE
+);
+INSERT INTO Class (ClassId, ClassName, Major, Grade, HeadTeacher)
+VALUES
+('CS202101', '计算机科学与技术2021级1班', '计算机科学与技术', 3, '张明远'),
+('CS202102', '计算机科学与技术2021级2班', '计算机科学与技术', 3, '李红霞'),
+('SE202001', '软件工程2020级1班', '软件工程', 4, '王建国'),
+('SE202002', '软件工程2020级2班', '软件工程', 4, '赵丽华'),
+('AI202201', '人工智能2022级1班', '人工智能', 2, '陈学斌'),
+('AI202202', '人工智能2022级2班', '人工智能', 2, '刘婷婷');
+
+INSERT INTO Student (StudentId, Name, Gender, BirthDate, Phone, Email, EnrollmentDate, ClassId)
+VALUES
+('20210001', '张三', '男', '2003-05-15', '13900139001', 'zhangsan@edu.cn', '2021-09-01', 'CS202101'),
+('20210002', '李四', '女', '2004-02-28', '13900139002', 'lisi@edu.cn', '2021-09-01', 'CS202101'),
+('20210003', '王五', '男', '2003-08-10', '13900139003', 'wangwu@edu.cn', '2021-09-01', 'CS202102'),
+('20210004', '赵六', '女', '2003-11-05', '13900139004', 'zhaoliu@edu.cn', '2021-09-01', 'CS202102'),
+('20200001', '钱七', '男', '2002-06-20', '13900139005', 'qianqi@edu.cn', '2020-09-01', 'SE202001'),
+('20200002', '孙八', '女', '2002-09-12', '13900139006', 'sunba@edu.cn', '2020-09-01', 'SE202001'),
+('20200003', '周九', '男', '2002-03-08', '13900139007', 'zhoujiu@edu.cn', '2020-09-01', 'SE202002'),
+('20200004', '吴十', '女', '2002-12-30', '13900139008', 'wushi@edu.cn', '2020-09-01', 'SE202002'),
+('20220001', '郑十一', '男', '2004-07-18', '13900139009', 'zhengshiyi@edu.cn', '2022-09-01', 'AI202201'),
+('20220002', '王芳', '女', '2004-04-22', '13900139010', 'wangfang@edu.cn', '2022-09-01', 'AI202201'),
+('20220003', '李明', '男', '2004-01-14', '13900139011', 'liming@edu.cn', '2022-09-01', 'AI202202'),
+('20220004', '张红', '女', '2004-10-09', '13900139012', 'zhanghong@edu.cn', '2022-09-01', 'AI202202');
+
+INSERT INTO Student (StudentId, Name, Gender, BirthDate, Phone, Email, EnrollmentDate, ClassId)
+VALUES
+('20210001', '张三', '男', '2003-05-15', '13900139001', 'zhangsan@edu.cn', '2021-09-01', 'CS202101'),
+('20210002', '李四', '女', '2004-02-28', '13900139002', 'lisi@edu.cn', '2021-09-01', 'CS202101'),
+('20210003', '王五', '男', '2003-08-10', '13900139003', 'wangwu@edu.cn', '2021-09-01', 'CS202102'),
+('20210004', '赵六', '女', '2003-11-05', '13900139004', 'zhaoliu@edu.cn', '2021-09-01', 'CS202102'),
+('20200001', '钱七', '男', '2002-06-20', '13900139005', 'qianqi@edu.cn', '2020-09-01', 'SE202001'),
+('20200002', '孙八', '女', '2002-09-12', '13900139006', 'sunba@edu.cn', '2020-09-01', 'SE202001'),
+('20200003', '周九', '男', '2002-03-08', '13900139007', 'zhoujiu@edu.cn', '2020-09-01', 'SE202002'),
+('20200004', '吴十', '女', '2002-12-30', '13900139008', 'wushi@edu.cn', '2020-09-01', 'SE202002'),
+('20220001', '郑十一', '男', '2004-07-18', '13900139009', 'zhengshiyi@edu.cn', '2022-09-01', 'AI202201'),
+('20220002', '王芳', '女', '2004-04-22', '13900139010', 'wangfang@edu.cn', '2022-09-01', 'AI202201'),
+('20220003', '李明', '男', '2004-01-14', '13900139011', 'liming@edu.cn', '2022-09-01', 'AI202202'),
+('20220004', '张红', '女', '2004-10-09', '13900139012', 'zhanghong@edu.cn', '2022-09-01', 'AI202202');
+
+INSERT INTO Course (CourseId, CourseName, Credit, Hours, Type, Semester)
+VALUES
+('CS101', '数据结构', 4, 64, '必修', '2023-2024-1'),
+('CS102', '算法设计与分析', 3, 48, '必修', '2023-2024-1'),
+('SE201', '软件工程导论', 3, 48, '必修', '2023-2024-1'),
+('AI301', '机器学习基础', 4, 64, '必修', '2023-2024-2'),
+('MA001', '高等数学A', 6, 96, '必修', '2023-2024-1'),
+('EN001', '大学英语I', 4, 64, '必修', '2023-2024-1'),
+('CS103', '数据库系统原理', 3, 48, '选修', '2023-2024-2'),
+('AI302', '自然语言处理', 3, 48, '选修', '2023-2024-2'),
+('PH001', '大学物理', 4, 64, '必修', '2023-2024-1');
+
+INSERT INTO Teacher (TeacherId, Name, Title, Department, Phone, Email)
+VALUES
+('T001', '张明远', '教授', '计算机学院', '13800138001', 'zhangmy@edu.cn'),
+('T002', '李红霞', '副教授', '计算机学院', '13800138002', 'lihx@edu.cn'),
+('T003', '王建国', '教授', '软件学院', '13800138003', 'wangjg@edu.cn'),
+('T004', '赵丽华', '副教授', '软件学院', '13800138004', 'zhaolh@edu.cn'),
+('T005', '陈学斌', '教授', '人工智能学院', '13800138005', 'chenxb@edu.cn'),
+('T006', '刘婷婷', '讲师', '人工智能学院', '13800138006', 'liutt@edu.cn'),
+('T007', '孙正平', '教授', '数学系', '13800138007', 'sunzp@edu.cn'),
+('T008', '周小兰', '副教授', '外国语学院', '13800138008', 'zhouxl@edu.cn'),
+('T009', '吴建国', '教授', '物理系', '13800138009', 'wujg@edu.cn');
+
+INSERT INTO Score (StudentId, CourseId, UsualScore, MidtermScore, FinalScore, TotalScore, ExamDate)
+VALUES
+-- 张三的成绩
+('20210001', 'CS101', 85.00, 78.00, 82.00, 81.70, '2024-01-15'),
+('20210001', 'MA001', 90.00, 88.00, 92.00, 90.40, '2024-01-20'),
+('20210001', 'EN001', 88.00, 85.00, 90.00, 88.30, '2024-01-18'),
+
+-- 李四的成绩
+('20210002', 'CS101', 92.00, 88.00, 95.00, 92.30, '2024-01-15'),
+('20210002', 'MA001', 85.00, 80.00, 88.00, 85.10, '2024-01-20'),
+('20210002', 'EN001', 90.00, 92.00, 94.00, 92.20, '2024-01-18'),
+
+-- 王五的成绩
+('20210003', 'CS102', 78.00, 72.00, 80.00, 77.40, '2024-01-16'),
+('20210003', 'MA001', 82.00, 75.00, 85.00, 81.10, '2024-01-20'),
+('20210003', 'EN001', 85.00, 80.00, 88.00, 84.70, '2024-01-18'),
+
+-- 钱七的成绩
+('20200001', 'SE201', 88.00, 85.00, 90.00, 88.30, '2024-01-17'),
+('20200001', 'PH001', 90.00, 87.00, 92.00, 90.30, '2024-01-19'),
+('20200001', 'EN001', 85.00, 82.00, 88.00, 85.30, '2024-01-18'),
+
+-- 郑十一的成绩
+('20220001', 'AI301', 92.00, 90.00, 95.00, 92.90, '2024-06-20'),
+('20220001', 'CS103', 85.00, 80.00, 88.00, 85.10, '2024-06-22'),
+('20220001', 'EN001', 88.00, 85.00, 90.00, 88.30, '2024-01-18');
+
+INSERT INTO Teaching (TeacherId, CourseId, AcademicYear, Term)
+VALUES
+('T001', 'CS101', '2023-2024', '1'),
+('T002', 'CS102', '2023-2024', '1'),
+('T003', 'SE201', '2023-2024', '1'),
+('T005', 'AI301', '2023-2024', '2'),
+('T007', 'MA001', '2023-2024', '1'),
+('T008', 'EN001', '2023-2024', '1'),
+('T004', 'CS103', '2023-2024', '2'),
+('T006', 'AI302', '2023-2024', '2'),
+('T009', 'PH001', '2023-2024', '1'),
+('T001', 'CS103', '2023-2024', '2'),
+('T002', 'CS101', '2023-2024', '2');
+-- 创建视图1：学生详细信息视图
+CREATE VIEW View_StudentDetail AS
+SELECT
+    s.StudentId AS 学号,
+    s.Name AS 姓名,
+    s.Gender AS 性别,
+    YEAR(CURRENT_DATE()) - YEAR(s.BirthDate) -
+        (DATE_FORMAT(CURRENT_DATE(), '%m%d') < DATE_FORMAT(s.BirthDate, '%m%d')) AS 年龄,
+    s.BirthDate AS 出生日期,
+    s.Phone AS 联系电话,
+    s.Email AS 电子邮箱,
+    s.EnrollmentDate AS 入学日期,
+    c.ClassName AS 班级名称,
+    c.Major AS 专业,
+    c.Grade AS 年级,
+    c.HeadTeacher AS 班主任
+FROM Student s
+LEFT JOIN Class c ON s.ClassId = c.ClassId;
+
+-- 查询视图1
+SELECT * FROM View_StudentDetail ORDER BY 年级 DESC, 学号;
+
+-- 创建视图2：学生成绩综合视图
+CREATE VIEW View_StudentScoreSummary AS
+SELECT
+    s.StudentId AS 学号,
+    s.Name AS 学生姓名,
+    c.ClassName AS 班级,
+    co.CourseId AS 课程编号,
+    co.CourseName AS 课程名称,
+    co.Type AS 课程类型,
+    co.Credit AS 学分,
+    t.Name AS 授课教师,
+    sc.UsualScore AS 平时成绩,
+    sc.MidtermScore AS 期中成绩,
+    sc.FinalScore AS 期末成绩,
+    sc.TotalScore AS 总评成绩,
+    sc.ExamDate AS 考试日期,
+    CASE
+        WHEN sc.TotalScore >= 90 THEN '优秀'
+        WHEN sc.TotalScore >= 80 THEN '良好'
+        WHEN sc.TotalScore >= 70 THEN '中等'
+        WHEN sc.TotalScore >= 60 THEN '及格'
+        ELSE '不及格'
+    END AS 成绩等级,
+    CASE
+        WHEN sc.TotalScore >= 60 THEN '及格'
+        ELSE '不及格'
+    END AS 是否及格
+FROM Score sc
+INNER JOIN Student s ON sc.StudentId = s.StudentId
+INNER JOIN Course co ON sc.CourseId = co.CourseId
+LEFT JOIN Class c ON s.ClassId = c.ClassId
+LEFT JOIN Teaching tg ON co.CourseId = tg.CourseId
+LEFT JOIN Teacher t ON tg.TeacherId = t.TeacherId
+WHERE tg.TeachingId = (
+    SELECT MAX(TeachingId)
+    FROM Teaching
+    WHERE CourseId = co.CourseId
+);
+
+-- 查询视图2：查看所有成绩
+SELECT * FROM View_StudentScoreSummary ORDER BY 学号, 总评成绩 DESC;
+
+-- 查询视图2：查看优秀成绩（>=90分）
+SELECT * FROM View_StudentScoreSummary
+WHERE 成绩等级 = '优秀'
+ORDER BY 总评成绩 DESC;
+
+-- 查询视图2：查看不及格成绩
+SELECT * FROM View_StudentScoreSummary
+WHERE 是否及格 = '不及格'
+ORDER BY 学号;
+
+-- 1. 添加新字段
+ALTER TABLE Student
+ADD COLUMN Address VARCHAR(200) COMMENT '家庭住址';
+
+-- 2. 验证修改
+DESCRIBE Student;
+
+-- 1. 修改学分字段为DECIMAL类型（允许0.5学分）
+ALTER TABLE Course
+MODIFY COLUMN Credit DECIMAL(3,1) COMMENT '学分（可含0.5分）';
+
+-- 2. 添加课程描述字段
+ALTER TABLE Course
+ADD COLUMN Description TEXT COMMENT '课程描述';
+
+-- 3. 验证修改
+DESCRIBE Course;
+-- 结果：Credit字段类型从INT变为DECIMAL(3,1)，新增Description字段
+-- 结果：成功添加Address字段
+
+-- 1. 插入新的班级
+INSERT INTO Class (ClassId, ClassName, Major, Grade, HeadTeacher)
+VALUES
+('DS202301', '数据科学2023级1班', '数据科学', 1, '周老师'),
+('CS202302', '网络安全2023级1班', '网络安全', 1, '吴老师');
+
+-- 2. 查询验证
+SELECT * FROM Class WHERE Grade = 1;
+-- 结果：成功插入2个2023级的新班级
+
+-- 1. 更新学生邮箱域名（从@edu.cn改为@university.edu.cn）
+UPDATE Student
+SET Email = REPLACE(Email, '@edu.cn', '@university.edu.cn')
+WHERE Email LIKE '%@edu.cn';
+
+-- 2. 为计算机专业学生添加备注
+UPDATE Student
+SET Address = CONCAT(Address, ' (计算机专业学生)')
+WHERE ClassId IN (
+    SELECT ClassId FROM Class WHERE Major = '计算机科学与技术'
+);
+
+-- 3. 查询验证
+SELECT StudentId, Name, Email, Address
+FROM Student;
+
+-- 1. 删除2024年1月20日之前的不及格成绩（总评<60）
+DELETE FROM Score
+WHERE TotalScore < 60 AND ExamDate < '2024-01-20';
+
+-- 2. 查询删除影响的行数
+SELECT ROW_COUNT() AS '删除的记录数';
+-- 结果：返回被删除的成绩记录数量
+
+-- 查询所有学生基本信息，按学号排序
+SELECT
+    StudentId AS 学号,
+    Name AS 姓名,
+    Gender AS 性别,
+    BirthDate AS 出生日期,
+    TIMESTAMPDIFF(YEAR, BirthDate, CURDATE()) AS 年龄,
+    Phone AS 联系电话,
+    Email AS 电子邮箱,
+    EnrollmentDate AS 入学日期
+FROM Student
+ORDER BY StudentId;
+
+-- 查询2021年入学的计算机专业男生
+SELECT
+    s.StudentId AS 学号,
+    s.Name AS 姓名,
+    s.Gender AS 性别,
+    s.EnrollmentDate AS 入学日期,
+    c.ClassName AS 班级,
+    c.Major AS 专业
+FROM Student s
+JOIN Class c ON s.ClassId = c.ClassId
+WHERE YEAR(s.EnrollmentDate) = 2021
+    AND s.Gender = '男'
+    AND c.Major = '计算机科学与技术'
+ORDER BY s.StudentId;
+
+-- 查询学生详细信息（包含班级、专业等）
+SELECT
+    s.StudentId AS 学号,
+    s.Name AS 姓名,
+    s.Gender AS 性别,
+    TIMESTAMPDIFF(YEAR, s.BirthDate, CURDATE()) AS 年龄,
+    c.ClassName AS 班级,
+    c.Major AS 专业,
+    c.Grade AS 年级,
+    c.HeadTeacher AS 班主任,
+    s.Phone AS 联系电话,
+    s.Email AS 电子邮箱
+FROM Student s
+INNER JOIN Class c ON s.ClassId = c.ClassId
+WHERE c.Grade IN (2, 3)  -- 查询2-3年级学生
+ORDER BY c.Grade, s.StudentId;
+
+
+-- 创建存储过程：获取学生成绩单
+DELIMITER $$
+
+CREATE PROCEDURE GetStudentTranscript(
+    IN student_id VARCHAR(20)
+)
+BEGIN
+    DECLARE student_name VARCHAR(50);
+    DECLARE class_name VARCHAR(50);
+    DECLARE total_credits INT;
+    DECLARE gpa DECIMAL(3,2);
+
+    -- 获取学生基本信息
+    SELECT s.Name, c.ClassName
+    INTO student_name, class_name
+    FROM Student s
+    JOIN Class c ON s.ClassId = c.ClassId
+    WHERE s.StudentId = student_id;
+
+    -- 获取总学分和GPA
+    SELECT
+        SUM(co.Credit) AS total_credits,
+        ROUND(
+            SUM(
+                CASE
+                    WHEN sc.TotalScore >= 90 THEN 4.0 * co.Credit
+                    WHEN sc.TotalScore >= 80 THEN 3.0 * co.Credit
+                    WHEN sc.TotalScore >= 70 THEN 2.0 * co.Credit
+                    WHEN sc.TotalScore >= 60 THEN 1.0 * co.Credit
+                    ELSE 0
+                END
+            ) / SUM(co.Credit),
+        2) AS gpa
+    INTO total_credits, gpa
+    FROM Score sc
+    JOIN Course co ON sc.CourseId = co.CourseId
+    WHERE sc.StudentId = student_id
+    AND sc.TotalScore >= 60;  -- 只计算及格课程
+
+    -- 显示学生信息
+    SELECT
+        student_id AS 学号,
+        student_name AS 姓名,
+        class_name AS 班级,
+        total_credits AS 总学分,
+        gpa AS GPA;
+
+    -- 显示详细成绩
+    SELECT
+        sc.CourseId AS 课程编号,
+        co.CourseName AS 课程名称,
+        co.Type AS 课程类型,
+        co.Credit AS 学分,
+        sc.UsualScore AS 平时成绩,
+        sc.MidtermScore AS 期中成绩,
+        sc.FinalScore AS 期末成绩,
+        sc.TotalScore AS 总评成绩,
+        CASE
+            WHEN sc.TotalScore >= 90 THEN 'A'
+            WHEN sc.TotalScore >= 80 THEN 'B'
+            WHEN sc.TotalScore >= 70 THEN 'C'
+            WHEN sc.TotalScore >= 60 THEN 'D'
+            ELSE 'F'
+        END AS 成绩等级,
+        CASE
+            WHEN sc.TotalScore >= 60 THEN '是'
+            ELSE '否'
+        END AS 是否及格
+    FROM Score sc
+    JOIN Course co ON sc.CourseId = co.CourseId
+    WHERE sc.StudentId = student_id
+    ORDER BY co.CourseId;
+
+END$$
+
+DELIMITER ;
+
+-- 使用存储过程
+CALL GetStudentTranscript('20210001');
+
+-- 创建触发器：插入或更新成绩时自动计算总评成绩
+DELIMITER $$
+
+CREATE TRIGGER CalculateTotalScore_BeforeInsert
+BEFORE INSERT ON Score
+FOR EACH ROW
+BEGIN
+    -- 检查成绩是否为空，为空则设为0
+    SET NEW.UsualScore = IFNULL(NEW.UsualScore, 0);
+    SET NEW.MidtermScore = IFNULL(NEW.MidtermScore, 0);
+    SET NEW.FinalScore = IFNULL(NEW.FinalScore, 0);
+
+    -- 计算总评成绩（平时30% + 期中30% + 期末40%）
+    SET NEW.TotalScore = ROUND(
+        NEW.UsualScore * 0.3 +
+        NEW.MidtermScore * 0.3 +
+        NEW.FinalScore * 0.4,
+    2);
+
+    -- 确保成绩在0-100范围内
+    IF NEW.TotalScore < 0 THEN
+        SET NEW.TotalScore = 0;
+    ELSEIF NEW.TotalScore > 100 THEN
+        SET NEW.TotalScore = 100;
+    END IF;
+
+    -- 如果没有考试日期，设为当前日期
+    IF NEW.ExamDate IS NULL THEN
+        SET NEW.ExamDate = CURDATE();
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- 创建更新时的触发器
+DELIMITER $$
+
+CREATE TRIGGER CalculateTotalScore_BeforeUpdate
+BEFORE UPDATE ON Score
+FOR EACH ROW
+BEGIN
+    -- 检查成绩是否为空，为空则设为0
+    SET NEW.UsualScore = IFNULL(NEW.UsualScore, OLD.UsualScore);
+    SET NEW.MidtermScore = IFNULL(NEW.MidtermScore, OLD.MidtermScore);
+    SET NEW.FinalScore = IFNULL(NEW.FinalScore, OLD.FinalScore);
+
+    -- 计算总评成绩
+    SET NEW.TotalScore = ROUND(
+        NEW.UsualScore * 0.3 +
+        NEW.MidtermScore * 0.3 +
+        NEW.FinalScore * 0.4,
+    2);
+
+    -- 确保成绩在0-100范围内
+    IF NEW.TotalScore < 0 THEN
+        SET NEW.TotalScore = 0;
+    ELSEIF NEW.TotalScore > 100 THEN
+        SET NEW.TotalScore = 100;
+    END IF;
+END$$
+
+DELIMITER ;
